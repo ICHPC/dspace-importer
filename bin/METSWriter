@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java  -Xmx1024M -jar ../jar/METSWriter.jar $*
+

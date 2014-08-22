@@ -1,0 +1,15 @@
+#!/bin/sh
+
+T=`mktemp`
+
+cat $2 > $T
+
+stdinchi-1 $T -InChI2Struct  2> /dev/null
+
+stdinchi-1 $T.txt -InpAux -Key  2>/dev/null
+
+grep -e "^InChIKey="  $T.txt.txt > InChIKeys.txt
+
+rm $T.*
+
+
