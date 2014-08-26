@@ -10,7 +10,7 @@ public class METSMetadata {
 	Date experimentDate=new Date();
 	String rights     =null;
 	String publisher	=null;
-	String contributor=null;
+	Vector contributor=new Vector();
 	String creator    =null;
 	String foaf       =null;
 	String orcid      =null;

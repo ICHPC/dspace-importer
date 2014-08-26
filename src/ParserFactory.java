@@ -40,14 +40,17 @@ public static final synchronized METSMetadata  parse( String filename, String mi
 			return new CMLParser( filename, global_metadata );
 	}
 */
+		//return new Parser( filename, global_metadata );
+	Parser p = new DefaultParser();
+	p.setup( filename, global_metadata );
+	return p.parse();
+
 	}catch(Exception ex ) {
 		ex.printStackTrace( System.err );
 		throw new InstantiationException();
 	}
 
-	System.err.println( "No hander for ["+mimetype+"]" );
-	//return new Parser( filename, global_metadata );
-	return new METSMetadata(); 
+	//return new METSMetadata(); 
 }
 
 }

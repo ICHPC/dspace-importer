@@ -166,9 +166,13 @@ private void parse_file() {
 					else {
 						key   = s.substring(0, i).trim().toLowerCase();
 			 			value = s.substring(i+1, s.length()).trim();			
-						//debug.println(9, "Adding key ["+key+"] Value ["+value+"]");
-						
-						p.put(key, value);
+						System.out.println( "Adding key ["+key+"] Value ["+value+"]");
+
+						Object a = p.get(key);
+						if( a == null ) {						
+							p.put(key, value);
+						}else if ( a instanceof java.util.Vector )  { Vector v = (Vector) a; v.addElement(value); }
+						else { Vector v= new Vector(); v.addElement(a); v.addElement( value );  p.put( key, v ); }
 		  			}					  
 				}
 			}
@@ -447,6 +451,40 @@ public boolean has_section( String section ) {
 	else
 		return true;
 }
+
+public Vector get_field_as_vector( String section, String field ) 
+		throws NoSuchKeyException, NoSuchSectionException {
+
+	Hashtable s;
+
+	if(section==null) {
+		throw new NoSuchSectionException();
+	}
+	if(field==null) {
+		throw new NoSuchKeyException();
+	}
+
+	s = (Hashtable) sections.get(section);
+
+	if( s == null) {
+		throw new NoSuchSectionException("Section ["+section+"] not found");
+	}
+
+	
+	Object t = s.get(field);	
+
+	if( t == null ) {
+		throw new NoSuchKeyException("Field ["+field+"] in section ["+section+"] not found");
+	}
+
+	if( t instanceof Vector	 ) { return (Vector)(t); }
+	else {
+		Vector v = new Vector();
+		v.addElement( (String) t );
+		return v;
+	}
+}
+
 
 public String get_field( String section, String field ) 
 	throws NoSuchKeyException, NoSuchSectionException {

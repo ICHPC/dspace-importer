@@ -301,11 +301,12 @@ private void set_md( Element e, METSMetadata md ) {
 		e.appendChild( e2 );
 	}
 
-	if (md.contributor != null ) {
-		Element e2 = (Element) doc.createElement( "dc:contributor" );
-		e2.setAttribute( "xmlns" , "http://purl.org/dc/elements/1.1/" );
-		e2.appendChild( doc.createTextNode( md.contributor ) );
-		e.appendChild( e2 );
+	for( int i=0; i<md.contributor.size(); i++ ) {
+		String ms = (String) md.contributor.elementAt(i);
+		Element es = (Element) doc.createElement( "dc:contributor" );
+		es.setAttribute( "xmlns" , "http://purl.org/dc/elements/1.1/" );
+		es.appendChild( doc.createTextNode( ms ));
+		e.appendChild( es );
 	}
 
 	if (md.creator != null ) {
@@ -477,9 +478,27 @@ public static  METSMetadata readMetadata (DataParser dp ) throws Exception {
 		a = dp.get_field( "default", "title" );
 		if( a!=null && a.trim().length() > 0 ) 
 			md.title = a;
-		a = dp.get_field( "default", "identifier" );
-		if( a!=null && a.trim().length() > 0 ) 
-			md.add_identifier(a);// = a;
+
+		{
+			Vector v = dp.get_field_as_vector( "default", "identifier" );
+			for( int i=0; i< v.size(); i++ ) {
+				a = (String) v.elementAt(i);
+				if( a!=null && a.trim().length() > 0 ) 
+					md.add_identifier(a);// = a;
+			}
+		}
+
+
+		{
+			Vector v = dp.get_field_as_vector( "default", "contributor" );
+			for( int i=0; i< v.size(); i++ ) {
+				a = (String) v.elementAt(i);
+				if( a!=null && a.trim().length() > 0 ) 
+					md.contributor.addElement(a);// = a;
+			}
+		}
+
+
 		a = dp.get_field( "default", "license" );
 		if( a!=null && a.trim().length() > 0 ) 
 			md.license = a;
@@ -489,9 +508,6 @@ public static  METSMetadata readMetadata (DataParser dp ) throws Exception {
 		a = dp.get_field( "default", "publisher" );
 		if( a!=null && a.trim().length() > 0 ) 
 			md.publisher = a;
-		a = dp.get_field( "default", "contributor" );
-		if( a!=null && a.trim().length() > 0 ) 
-			md.contributor = a;
 		a = dp.get_field( "default", "creator" );
 		if( a!=null && a.trim().length() > 0 ) 
 			md.creator = a;
